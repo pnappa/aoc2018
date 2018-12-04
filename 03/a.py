@@ -10,12 +10,7 @@ with open('input', 'r') as ifile:
         # colour in the rectangle
         for ih in range(h):
             for iw in range(w):
-                if rect[y+ih][x+iw] == 0:
-                    rect[y+ih][x+iw] = 1
-                else:
-                    rect[y+ih][x+iw] = -1
-
-print(rect)
+                rect[y+ih][x+iw] += 1
 
 csum = 0
 for row in rect:

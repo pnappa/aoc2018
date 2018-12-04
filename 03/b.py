@@ -19,8 +19,6 @@ with open('input', 'r') as ifile:
                 else:
                     rect[y+ih][x+iw] = -1
 
-print(rect)
-
 # iterate over the cloths to see if all of their squares are 1
 for idnum, x,y,w,h in cloths:
     allset = True
@@ -32,7 +30,7 @@ for idnum, x,y,w,h in cloths:
         if not allset:
             break
     if not allset:
-        continu:
+        continue
     else:
         print("found free:", idnum)
             
