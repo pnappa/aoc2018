@@ -3,6 +3,7 @@ from collections import Counter
 from time import time
 
 # fill county words with (word, sumchars)
+# XXX: sumchars is pointless, I was doing this to reduce the solution space, but the input set was TINY, so doesn't matter
 county_words = []
 offset = ord('a')
 with open('input', 'r') as ifile:
@@ -11,8 +12,6 @@ with open('input', 'r') as ifile:
         county_words.append((line, sum(map(lambda x: ord(x) - offset, line))))
 
 county_words.sort(key=lambda x: x[1])
-print(county_words)
-
 
 def hamming_distance(s1, s2):
     """Return the Hamming distance between equal-length sequences"""
@@ -30,4 +29,4 @@ for word, count in county_words:
             print(word, word2)
             
 end = time()
-print(end-start)
+print("time taken:", end-start)
