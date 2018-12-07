@@ -5,7 +5,6 @@ with open('input', 'r') as ifile:
     for line in ifile.readlines():
         fromV = line[5:6]
         toV = line[36:37]
-        print(fromV, toV)
         x.append((fromV, toV))
 
 verts = string.ascii_uppercase
@@ -25,7 +24,6 @@ pool = sorted([v for v in rev_adjacency if len(rev_adjacency[v]) == 0])
 pool.sort(reverse=True)
 for p in pool:
     del rev_adjacency[p]
-print(rev_adjacency)
 num_avail_workers = 5
 
 # current time left for each task

@@ -5,7 +5,6 @@ with open('input', 'r') as ifile:
     for line in ifile.readlines():
         fromV = line[5:6]
         toV = line[36:37]
-        print(fromV, toV)
         x.append((fromV, toV))
 
 verts = string.ascii_uppercase
