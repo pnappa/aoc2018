@@ -1,11 +1,14 @@
 import string
 
+import sys
 grid = []
 with open('input', 'r') as ifile:
     for line in ifile.readlines():
         grid.append(list(line.strip()))
 
-attack_power = 3
+goblin_attack_power = 3
+elf_attack_power = 3
+
 
 units = []
 
@@ -145,12 +148,20 @@ def attack_if_possible(grid, units, cx, cy, col):
     ind = find_agent_index(*enemy, units)
 
     xindexprime, yindexprime, oppotype, new_hp = units[ind]
-    new_hp -= attack_power
-    print("attack occuring by", col, "to", xindexprime, yindexprime, "hp is now", new_hp)
+    if col == 'E':
+        new_hp -= elf_attack_power
+    elif col == 'G':
+        new_hp -= goblin_attack_power
+    # print("attack occuring by", col, "to", xindexprime, yindexprime, "hp is now", new_hp)
     # killed
     if new_hp < 0:
         units[ind] = None
         grid[enemy[0]][enemy[1]] = '.'
+
+        # fuck, an elf died
+        if oppotype == 'E':
+            print("elf died", elf_attack_power)
+            exit(-1)
     else:
         units[ind] = [xindexprime, yindexprime, oppotype, new_hp]
 
@@ -219,11 +230,11 @@ def iteration(grid, units):
 
             if attack_if_possible(grid, units, chosen_step[0], chosen_step[1], col):
                 last_attacking_index = index
-                print("moved and attacked!")
+                # print("moved and attacked!")
         else:
             last_attacking_index = index
             
-    print("was full round?", last_attacking_index == len(units)-1)
+    # print("was full round?", last_attacking_index == len(units)-1)
     wasfullround = (last_attacking_index == len(units)-1)
     # XXX: this wont work
     # units = [a for a in units if a is not None]
@@ -231,21 +242,26 @@ def iteration(grid, units):
 
     # sort by y, then x
     units.sort(key=lambda x: (x[1], x[0]))
-    if all([True if x[2] == 'E' else False for x in units]) or all([True if x[2] == 'G' else False for x in units]):
+    if all([True if x[2] == 'E' else False for x in units]):
         haswon = True
-        print("one side wins!!")
-        return
+        print("elf side wins!!")
 
-for i in range(1000):
-    print("\n".join(["".join(row) for row in grid]))
-    print(units)
-    iteration(grid, units)
-    if haswon:
-        sumhp = 0
-        for x,y, col, hp in units:
-            sumhp += hp
-        if wasfullround:
-            i+=1
-        print(i, sumhp)
-        exit()
+    if all([True if x[2] == 'G' else False for x in units]):
+        haswon = True
+        print("goblin side wins!!")
 
+while True:
+    elf_attack_power = int(sys.argv[1])
+
+    for i in range(1000):
+        #print("\n".join(["".join(row) for row in grid]))
+        # print(units)
+        iteration(grid, units)
+        if haswon:
+            sumhp = 0
+            for x,y, col, hp in units:
+                sumhp += hp
+            if wasfullround:
+                i+=1
+            print(i, sumhp, elf_attack_power)
+            exit()
