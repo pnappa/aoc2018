@@ -1,0 +1,1 @@
+how i did b was to pipe a to a file for a very large iteration count, open it with vim, then search and find the col that it occurs in
