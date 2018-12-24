@@ -14,56 +14,6 @@ regexo = []
 with open('input4', 'r') as ifile:
     regexo = ifile.readline().strip()
 
-# ignore the ^$
-#parse_list = list(regexo[1:-1])
-
-# return the list: will be of format ['NWES', ['S', ['SNE', None]], 'EEW']
-def parse_list(paths):
-    # https://stackoverflow.com/a/17141899/1129185
-    def nestify(xs):
-        stack = [[]]
-        for x in xs:
-            if x == '(':
-                stack[-1].append([])
-                stack.append(stack[-1][-1])
-            elif x == ')':
-                stack.pop()
-                if not stack:
-                    return 'error: opening bracket is missing'
-                    #raise ValueError('error: opening bracket is missing')
-            else:
-                stack[-1].append(x)
-        if len(stack) > 1:
-            return 'error: closing bracket is missing'
-            #raise ValueError('error: closing bracket is missing')
-        return stack.pop()
-
-    # go through and join strings, and replace '|'
-    def join_smoosh(xs):
-        res = []
-        for index, x in enumerate(xs):
-            if index == 0:
-                res.append(x)
-            else:
-                if type(res[-1]) == str and type(x) == str:
-                    res[-1] += x
-                else:
-                    pass
-
-
-    # the go through that isn't joined or supporting branches
-    # i.e.
-    # ['E', 'N', 'W', 'W', 'W', ['N', 'E', 'E', 'E', '|', 'S', 'S', 'E', ['E', 'E', '|', 'N']]]
-    pass_a =  nestify(paths)
-
-    # then we go and join strings
-
-
-# ignore the ^$
-parsed_path = parse_list(list(regexo[1:-1]))
-print(parsed_path)
-        
-
 class Node():
     def __init__(self):
         self.next = []
@@ -82,10 +32,6 @@ class Node():
         print("-"*layer + ">", self.label)
         for e in self.next:
             e.print(layer+1)
-
-#    def set_label(l):
-#        self.label = l
-
     
 # return a chain of Nodes
 def iter_path(it):
@@ -98,10 +44,13 @@ def iter_path(it):
             if el in "NEWS":
                 cnode.update_label(el)
             elif el == '(':
+                nek = Node()
                 # recurse on this bracket (remember, the ) has been swallowed)
                 for e in iter_path(it):
                     cnode.add_next(e)
-                retlist.append(Node())
+                    e.add_next(nek)
+
+                retlist.append(nek)
                 cnode = retlist[-1]
             elif el == ')':
                 return retlist
@@ -111,9 +60,20 @@ def iter_path(it):
     except StopIteration:
         return retlist
 
-path = iter_path(iter(regexo[1:-1]))
+# the first node is the start of the path graph
+path = iter_path(iter(regexo[1:-1]))[0]
 
 print(regexo)
-print(path)
-for e in path:
-    e.print()
+path.print()
+
+# a graphy object that stores known positions
+class Grid():
+    def __init__(self, startpos):
+        self.costs = {startpos: 0}
+
+    def get_cost(self, x, y):
+        if (x,y) in self.costs:
+            return self.costs[(x,y)]
+        else:
+            return 9999999999999
+
