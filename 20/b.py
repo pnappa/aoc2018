@@ -218,4 +218,5 @@ grid = Grid((0,0))
 grid.step_through((0,0), path)
 
 weighties = grid.bfs((0,0))
-print("max doors:", max(weighties.values()))
+# part b
+print("num with >= 1000", sum([1 for x in weighties.values() if x >= 1000]))
