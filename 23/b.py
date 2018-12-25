@@ -60,16 +60,16 @@ for extremum in extremums:
         continue
 
 print(cmax, cmax_in)
+cmax = list(set(cmax))
 
 def adjacent_points(x,y,z):
     ret = []
 
-    ret.append((x-1, y, z))
-    ret.append((x+1, y, z))
-    ret.append((x, y-1, z))
-    ret.append((x, y+1, z))
-    ret.append((x, y, z-1))
-    ret.append((x, y, z+1))
+    offsets = [(-1,-1,-1), (-1,-1,0), (-1, -1, 1), (-1, 0, -1), (1,1,1)]
+    for xoff in range(-1, 2):
+        for yoff in range(-1, 2):
+            for zoff in range(-1, 2):
+                ret.append((x+xoff, y+yoff, z+zoff))
 
     return ret
 
@@ -84,13 +84,22 @@ stack = []
 expected = cmax_in
 stack.append(cmax)
 positions = set()
+min_dist = 1e9
+looked_at = 0
 while len(stack):
     pos = stack.pop()
-    print(pos)
-
+    num_in = count_within(*pos, intersecting)
     # don't visit this as it's not our maxima
-    if count_within(*pos, intersecting) < expected or pos in positions:
+    if num_in < expected or pos in positions or sum(pos) > min_dist:
         continue
+
+    min_dist = sum(pos)
+
+    if looked_at % 1000 == 0:
+        print(looked_at, pos)
+    assert num_in == expected
+
+    looked_at += 1
 
     positions.add(pos)
     
@@ -99,17 +108,5 @@ while len(stack):
         stack.append(ap)
 
 print(positions)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
