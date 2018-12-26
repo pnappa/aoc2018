@@ -18,42 +18,28 @@ int main() {
     int r2 = 0;
     int r3 = 0;
     //int r4 = 0; // register 4 is RIP
-    int r5 = 0;
+    int r5 = 0; // r5 is now redundant.
 
-    // OMITTED: bitwise test code.
-    // reset register 3 after bitwise test
-    r3 = 0;
     do {
        r2 = r3 | 65536;
        r3 = 1397714;
 instr8:;
-       // XXX: we can remove r5, as it's 
-       // not used after this basic block.
-       r5 = r2 & 255;
-       r3 += r5;
+       r3 += r2 & 255;
        r3 &= 16777215;
        r3 *= 65899;
        r3 &= 16777215;
-       r5 = 256 > r2;
-       if (r5 == 1) {
+       if (256 > r2) {
            goto instr28;
        }
        goto instr17;
 instr17:;
-        r5 = 0;
-        if ((r5 + 1)*256 > r2) {
-            goto instr23;
+        if (256 > r2) {
+            goto instr26;
         }
         // addi 4 1 4
         goto instr27;
-instr23:;
-        // seti 25 2 4
-        goto instr26;
-        //r5 += 1;
-        //// seti 17 0 4
-        //goto instr18;
 instr26:;
-        r2 = r5;
+        r2 = 0;
 instr27:;
         goto instr8;
 instr28:;
