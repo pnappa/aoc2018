@@ -14,8 +14,9 @@
 
 //#define WAIT getchar();
 #define WAIT ;
-#define DUMP_REG ;
-//#define DUMP_REG printf("registers: [%d, %d, _, %d, %d, %d]\n", r0, r1, r3, r4, r5); WAIT
+#define DUMP_REG printf("registers: [%d, %d, _, %d, %d, %d]\n", r0, r1, r3, r4, r5); WAIT
+#define DEBUG_REG ;
+//#define DEBUG_REG DUMP_REG
 
 void init(int* r0, int* r1, int* r3, int* r4, int* r5) {
     // future assertion for potential optimisation
@@ -52,60 +53,36 @@ int main() {
     int r5 = 0;
 
     // the mini subroutine of rip instr17 onwards
-    init(&r0, &r1, &r3, &r4, &r4);
+    init(&r0, &r1, &r3, &r4, &r5);
 
     // OBSERVATIONS: 
     //      - r5 is never used in a result except as a condition variable
+    //          (or in the init, but it's assigned/added to r3 always)
 
-       r4 = 1;
-       DUMP_REG
-instr2:;
-       r1 = 1;
-       DUMP_REG
-instr3:;
-       r5 = r4 * r1;
-       DUMP_REG
+    r4 = 1;
+    DEBUG_REG;
+    do {
+        r1 = 1;
+        DEBUG_REG;
 
-       r5 = r5 == r3;
-       DUMP_REG
-       if (r5 == 1) {
-            goto instr7;
-       }
-       goto instr8;
-instr7:;
-       r0 += r4;
-       DUMP_REG
-instr8:;
-       r1 += 1;
-       DUMP_REG
+        do {
+            if (r4*r1 == r3) {
+                r0 += r4;
+            }
 
-       // gtrr 1 3 5
-       r5 = r1 > r3;
-       DUMP_REG
+            r1 += 1;
+            DEBUG_REG;
 
-        // addr 2 5 2
-       if (r5 == 1) {
-            goto instr12;
-       }
+        } while (!(r1 > r3));
 
-        // seti 2 6 2
-        goto instr3;
-instr12:;
         r4 += 1;
-       DUMP_REG
+        DEBUG_REG;
 
-        r5 = r4 > r3;
-       DUMP_REG
+    } while (!(r4 > r3));
 
-        if (r5 == 1) {
-            goto instr16;
-        }
-
-        goto instr2;
-instr16:;
-        // XXX: this is how the program 
-        // terminates doood
-        printf("program finished! squaring rip -> dead\n");
-       DUMP_REG
-        return 0;
+    // XXX: this is how the program 
+    // terminates doood
+    printf("program finished! squaring rip -> dead\n");
+    DUMP_REG;
+    return 0;
 }
