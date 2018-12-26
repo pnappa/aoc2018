@@ -41,7 +41,6 @@ instr8:;
        goto instr17;
 instr17:;
         r5 = 0;
-instr18:;
         if ((r5 + 1)*256 > r2) {
             goto instr23;
         }
@@ -50,9 +49,9 @@ instr18:;
 instr23:;
         // seti 25 2 4
         goto instr26;
-        r5 += 1;
-        // seti 17 0 4
-        goto instr18;
+        //r5 += 1;
+        //// seti 17 0 4
+        //goto instr18;
 instr26:;
         r2 = r5;
 instr27:;
