@@ -14,7 +14,7 @@
 
 int main() {
     int r0 = 0;
-    int r1 = 0;
+    int r1 = -1; // r1 is redundant
     int r2 = 0;
     int r3 = 0;
     //int r4 = 0; // register 4 is RIP
@@ -23,10 +23,12 @@ int main() {
     // OMITTED: bitwise test code.
     // reset register 3 after bitwise test
     r3 = 0;
-instr6:;
+    do {
        r2 = r3 | 65536;
        r3 = 1397714;
 instr8:;
+       // XXX: we can remove r5, as it's 
+       // not used after this basic block.
        r5 = r2 & 255;
        r3 += r5;
        r3 &= 16777215;
@@ -34,19 +36,13 @@ instr8:;
        r3 &= 16777215;
        r5 = 256 > r2;
        if (r5 == 1) {
-           goto instr16;
+           goto instr28;
        }
        goto instr17;
-instr16:;
-        goto instr28;
 instr17:;
         r5 = 0;
 instr18:;
-        // r1 is literally only used here.
-        r1 = r5 + 1;
-        r1 *= 256;
-        r1 = r1 > r2;
-        if (r1 == 1) {
+        if ((r5 + 1)*256 > r2) {
             goto instr23;
         }
         // addi 4 1 4
@@ -62,13 +58,9 @@ instr26:;
 instr27:;
         goto instr8;
 instr28:;
-        r5 = r3 == r0;         
-        // addr 5 4 4 
-        // this finished the program as we go to instruction 31.
-        if (r5 == 1) {
-            printf("finished!\n");
-            return 0;
-        }
-        // seti 5 8 4
-        goto instr6;
+
+    } while (r3 != r0);
+
+    printf("finished!\n");
+    return 0;
 }
