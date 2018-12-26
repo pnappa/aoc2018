@@ -50,8 +50,8 @@ int main() {
     int r4 = 0;
     int r5 = 0; // TODO: remove  this register
 
-    int result = 0; //part 1
-    //int result = 1; // part2
+    //int result = 0; //part 1
+    int result = 1; // part2
 
     // the mini subroutine of rip instr17 onwards
     init(result, &r1, &r3, &r4, &r5);
@@ -65,28 +65,17 @@ int main() {
     r4 = 1;
     DEBUG_REG;
     do {
-        r1 = 1;
-        DEBUG_REG;
-
-        do {
-            if (r4*r1 == r3) {
-                result += r4;
-            }
-
-            r1 += 1;
-            DEBUG_REG;
-
-        } while (r1 <= r3);
+        // as the inner loop just iterated until r1*r4 == r3, then result += r4, this is equivalent
+        // tbh, i could optimise it, as the result is eventually the sum all divisors of r3 in [1..r3]
+        if (r3 % r4 == 0) result += r4;
 
         r4 += 1;
         DEBUG_REG;
-
     } while (r4 <= r3);
 
     // XXX: this is how the program 
     // terminates doood
     printf("program finished! squaring rip -> dead\n");
     printf("result: %d\n", result);
-    //DUMP_REG;
     return 0;
 }
