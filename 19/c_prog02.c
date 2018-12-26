@@ -22,27 +22,20 @@ void init(int* r0, int* r1, int* r3, int* r4, int* r5) {
     // ..i think its true for this program..?
     assert(*r3 == 0 && *r5 == 0);
 
-    *r3 += 2;
-    *r3 *= *r3;
-    *r3 *= 19;
-    *r3 *= 11;
+    *r3 = ((2*2)*19*11);
 
-    *r5 += 2;
-    *r5 *= 22;
-    *r5 += 8;
+    *r5 = (2*22 + 8);
 
     *r3 += *r5;
 
     // if the register 0 is preset to 0, we next perform goto instr1, which is equivalent to leaving this fn
+    assert(*r0 == 0 || *r0 == 1);
     if (*r0 == 0) return;
 
-    *r5 = 27;
-    *r5 *= 28;
-    *r5 += 29;
-    *r5 *= 30;
-    *r5 *= 14;
-    *r5 *= 32;
+    *r5 = (27*28 + 29)*30*14*32;
+
     *r3 += *r5;
+
     *r0 = 0;
 
     return;
@@ -60,6 +53,9 @@ int main() {
 
     // the mini subroutine of rip instr17 onwards
     init(&r0, &r1, &r3, &r4, &r4);
+
+    // OBSERVATIONS: 
+    //      - r5 is never used in a result except as a condition variable
 
        r4 = 1;
        DUMP_REG
