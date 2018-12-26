@@ -1,11 +1,12 @@
+#include <set>
 #include <stdio.h>
+#include <iostream>
 #include <assert.h>
 #include <inttypes.h>
 
 /**
  * Fuck, the first decompiled program isn't equivalent...?
- * Blah, it didn't end up being necessary!
- * But it *did* mean i understood the program better!
+ * This *is* necessary! python is slow!
  */
 
 int num_instructions_executed = 0;
@@ -15,8 +16,11 @@ int num_instructions_executed = 0;
 #define DEBUG_REG ;
 //#define DEBUG_REG DUMP_REG
 #define INSTR(x) printf("instr %s, line %d - NUM: %d\n", x, __LINE__, ++num_instructions_executed);
+#define INSTR(x) ;
 
 int main() {
+
+    std::set<int64_t> r0values;
 
     int64_t r0 = 0;
     int64_t r1 = 0;
@@ -140,10 +144,14 @@ instr28:
     r5 = r3 == r0;
     DEBUG_REG;
 
-    INSTR("addr 5 4 4");
+    std::cout << "another valid r0 value: " << r3 << std::endl;
+    if (r0values.count(r3)) {
+        std::cout << "duplicate r0 value detected" << std::endl;
+        return 0;
+    }
+    r0values.emplace(r3);
 
-    DUMP_REG;
-    getchar();
+    INSTR("addr 5 4 4");
 
     if (r5 == 1) {
         puts("finished!");
